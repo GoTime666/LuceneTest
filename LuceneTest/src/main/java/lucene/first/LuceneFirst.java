@@ -70,7 +70,7 @@ public class LuceneFirst {
 		Directory directory = FSDirectory.open(new File("D:\\Resources\\index").toPath());
 		IndexReader indexReader = DirectoryReader.open(directory);
 		IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-		Query query = new TermQuery(new Term("content", "apache"));
+		Query query = new TermQuery(new Term("name", "spring"));
 		TopDocs topDocs = indexSearcher.search(query, 10);
 		long totalHits = topDocs.totalHits;
 		System.out.println("查询总记录数:" + totalHits);
@@ -81,7 +81,7 @@ public class LuceneFirst {
 			System.out.println("\nname:\n"+document.get("name"));
 			System.out.println("\npath:\n"+document.get("path"));
 			System.out.println("\nsize:\n"+document.get("size"));
-			System.out.println("\ncontent:\n"+document.get("content"));
+			//System.out.println("\ncontent:\n"+document.get("content"));
 			System.out.println("-----------------分割线-------------------------------\n\n\n");
 		}
 		indexReader.close();
