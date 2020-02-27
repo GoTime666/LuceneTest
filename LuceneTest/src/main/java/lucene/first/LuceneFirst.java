@@ -26,6 +26,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.junit.jupiter.api.Test;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
+@SuppressWarnings("unused")
 public class LuceneFirst {
 	@Test
 	public void createIndex() throws IOException {
@@ -33,7 +34,8 @@ public class LuceneFirst {
 		// Directory directory=new RAMDirectory();
 		// 存到磁盘
 		Directory directory = FSDirectory.open(new File("D:\\Resources\\index").toPath());
-		IndexWriter indexWriter = new IndexWriter(directory, new IndexWriterConfig());
+		IndexWriterConfig config=new IndexWriterConfig(new IKAnalyzer());
+		IndexWriter indexWriter = new IndexWriter(directory, config);
 		File dir = new File("D:\\Normal\\BaiduNetdiskDownload\\37.Lucene\\87.lucene\\lucene\\02.参考资料\\searchsource");
 		File[] files = dir.listFiles();
 		for (File f : files) {
@@ -61,7 +63,7 @@ public class LuceneFirst {
 		Directory directory = FSDirectory.open(new File("D:\\Resources\\index").toPath());
 		IndexReader indexReader = DirectoryReader.open(directory);
 		IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-		Query query = new TermQuery(new Term("content", "逻"));
+		Query query = new TermQuery(new Term("content", "逻辑"));
 		TopDocs topDocs = indexSearcher.search(query, 10);
 		long totalHits = topDocs.totalHits;
 		System.out.println("查询总记录数:" + totalHits);
@@ -69,10 +71,10 @@ public class LuceneFirst {
 		for (ScoreDoc scoreDoc : scoreDocs) {
 			int docId = scoreDoc.doc;
 			Document document = indexSearcher.doc(docId);
-			System.out.println(document.get("name"));
-			System.out.println(document.get("path"));
-			System.out.println(document.get("size"));
-			System.out.println(document.get("content"));
+			System.out.println("\nname:\n"+document.get("name"));
+			System.out.println("\npath:\n"+document.get("path"));
+			System.out.println("\nsize:\n"+document.get("size"));
+			System.out.println("\ncontent:\n"+document.get("content"));
 			System.out.println("-----------------分割线-------------------------------\n\n\n");
 		}
 		indexReader.close();
