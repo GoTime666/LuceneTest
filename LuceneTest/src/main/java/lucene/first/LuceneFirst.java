@@ -1,15 +1,26 @@
 package lucene.first;
 
-
 import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.junit.jupiter.api.Test;
@@ -29,18 +40,52 @@ public class LuceneFirst {
 			String filePath = f.getPath();
 			String fileContent = FileUtils.readFileToString(f, "utf-8");
 			long fileSize = FileUtils.sizeOf(f);
-			Field fieldName=new TextField("name", fileName, Field.Store.YES);
-			Field fieldPath=new TextField("path", filePath, Field.Store.YES);
-			Field fieldContent=new TextField("content", fileContent, Field.Store.YES);
-			Field fieldSize=new TextField("size", fileSize+"", Field.Store.YES);
-			Document document=new Document();
+			Field fieldName = new TextField("name", fileName, Field.Store.YES);
+			Field fieldPath = new TextField("path", filePath, Field.Store.YES);
+			Field fieldContent = new TextField("content", fileContent, Field.Store.YES);
+			Field fieldSize = new TextField("size", fileSize + "", Field.Store.YES);
+			Document document = new Document();
 			document.add(fieldName);
 			document.add(fieldPath);
 			document.add(fieldContent);
 			document.add(fieldSize);
 			indexWriter.addDocument(document);
-			
+
 		}
 		indexWriter.close();
+	}
+
+	@Test
+	public void searchIndex() throws IOException {
+		Directory directory = FSDirectory.open(new File("D:\\Resources\\index").toPath());
+		IndexReader indexReader = DirectoryReader.open(directory);
+		IndexSearcher indexSearcher = new IndexSearcher(indexReader);
+		Query query = new TermQuery(new Term("content", "spring"));
+		TopDocs topDocs = indexSearcher.search(query, 10);
+		long totalHits = topDocs.totalHits;
+		System.out.println("查询总记录数:" + totalHits);
+		ScoreDoc[] scoreDocs = topDocs.scoreDocs;
+		for (ScoreDoc scoreDoc : scoreDocs) {
+			int docId = scoreDoc.doc;
+			Document document = indexSearcher.doc(docId);
+			System.out.println(document.get("name"));
+			System.out.println(document.get("path"));
+			System.out.println(document.get("size"));
+			System.out.println(document.get("content"));
+			System.out.println("-----------------分割线-------------------------------\n\n\n");
+		}
+		indexReader.close();
+	}
+
+	@Test
+	public void testTokenStream() throws IOException {
+		Analyzer analyzer = new StandardAnalyzer();
+		TokenStream tokenStream = analyzer.tokenStream("", "Learn how to create a web page with Spring MVC.");
+		CharTermAttribute charTermAttribute = tokenStream.addAttribute(CharTermAttribute.class);
+		tokenStream.reset();
+		while (tokenStream.incrementToken()) {
+			System.out.println(charTermAttribute.toString());
+		}
+		tokenStream.close();
 	}
 }
