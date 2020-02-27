@@ -80,7 +80,7 @@ public class LuceneFirst {
 	@Test
 	public void testTokenStream() throws IOException {
 		Analyzer analyzer = new StandardAnalyzer();
-		TokenStream tokenStream = analyzer.tokenStream("", "Learn how to create a web page with Spring MVC.");
+		TokenStream tokenStream = analyzer.tokenStream("", "本以为说好的UTF-16不应该都是2嘛0.0，这里需要科普一下，这个方法的介绍里面有如下这一句话");
 		CharTermAttribute charTermAttribute = tokenStream.addAttribute(CharTermAttribute.class);
 		tokenStream.reset();
 		while (tokenStream.incrementToken()) {
