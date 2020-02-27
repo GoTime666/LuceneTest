@@ -70,7 +70,7 @@ public class LuceneFirst {
 		Directory directory = FSDirectory.open(new File("D:\\Resources\\index").toPath());
 		IndexReader indexReader = DirectoryReader.open(directory);
 		IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-		Query query = new TermQuery(new Term("content", "逻辑"));
+		Query query = new TermQuery(new Term("content", "apache"));
 		TopDocs topDocs = indexSearcher.search(query, 10);
 		long totalHits = topDocs.totalHits;
 		System.out.println("查询总记录数:" + totalHits);
