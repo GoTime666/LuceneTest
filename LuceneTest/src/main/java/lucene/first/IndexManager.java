@@ -50,7 +50,7 @@ public class IndexManager {
 		indexWriter.close();
 	}
 	
-	//更新文档
+	//更新文档(先删除后添加)
 	@Test
 	public void updateDocument() throws IOException {
 		Document document=new Document();
