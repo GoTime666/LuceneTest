@@ -10,6 +10,8 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.LongPoint;
+import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -44,14 +46,19 @@ public class LuceneFirst {
 			String fileContent = FileUtils.readFileToString(f, "utf-8");
 			long fileSize = FileUtils.sizeOf(f);
 			Field fieldName = new TextField("name", fileName, Field.Store.YES);
-			Field fieldPath = new TextField("path", filePath, Field.Store.YES);
+			//Field fieldPath = new TextField("path", filePath, Field.Store.YES);
+			Field fieldPath = new StoredField("path", filePath);
 			Field fieldContent = new TextField("content", fileContent, Field.Store.YES);
-			Field fieldSize = new TextField("size", fileSize + "", Field.Store.YES);
+			//Field fieldSize = new TextField("size", fileSize + "", Field.Store.YES);
+			Field fieldSizeValue = new LongPoint("size", fileSize);
+			Field fieldSizeStore = new StoredField("size", fileSize);
 			Document document = new Document();
 			document.add(fieldName);
 			document.add(fieldPath);
 			document.add(fieldContent);
-			document.add(fieldSize);
+			//document.add(fieldSize);
+			document.add(fieldSizeValue);
+			document.add(fieldSizeStore);
 			indexWriter.addDocument(document);
 
 		}
