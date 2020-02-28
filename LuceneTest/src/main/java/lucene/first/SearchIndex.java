@@ -27,7 +27,11 @@ public class SearchIndex {
 
 	@Test
 	public void testRangeQuery() throws IOException {
-		Query query = LongPoint.newRangeQuery("size", 0l, 10000l);
+		Query query = LongPoint.newRangeQuery("size", 0l, 100l);
+		printResult(query);
+	}
+	
+	private void printResult(Query query) throws IOException{
 		TopDocs topDocs = indexSearcher.search(query, 10);
 		System.out.println("总记录数: " + topDocs.totalHits);
 		ScoreDoc[] scoreDocs = topDocs.scoreDocs;
@@ -40,5 +44,7 @@ public class SearchIndex {
 			// System.out.println("\ncontent:\n"+document.get("content"));
 			System.out.println("-----------------分割线-------------------------------\n\n\n");
 		}
+		indexReader.close();
 	}
+	
 }
