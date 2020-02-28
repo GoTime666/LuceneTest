@@ -7,6 +7,8 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.LongPoint;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -14,6 +16,7 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.junit.Before;
 import org.junit.Test;
+import org.wltea.analyzer.lucene.IKAnalyzer;
 
 public class SearchIndex {
 	private IndexReader indexReader;
@@ -50,6 +53,12 @@ public class SearchIndex {
 	}
 	
 	
-	
+	//类百度查询
+	@Test
+	public void testQueryParser() throws ParseException, IOException {
+		QueryParser queryParser=new QueryParser("name", new IKAnalyzer());
+		Query query = queryParser.parse("Lucene是一个Java开发的全文检索工具包");
+		printResult(query);
+	}
 	
 }

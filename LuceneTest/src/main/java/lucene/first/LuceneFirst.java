@@ -18,6 +18,8 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -36,7 +38,7 @@ public class LuceneFirst {
 		// Directory directory=new RAMDirectory();
 		// 存到磁盘
 		Directory directory = FSDirectory.open(new File("D:\\Resources\\index").toPath());
-		IndexWriterConfig config=new IndexWriterConfig(new IKAnalyzer());
+		IndexWriterConfig config = new IndexWriterConfig(new IKAnalyzer());
 		IndexWriter indexWriter = new IndexWriter(directory, config);
 		File dir = new File("D:\\Normal\\BaiduNetdiskDownload\\37.Lucene\\87.lucene\\lucene\\02.参考资料\\searchsource");
 		File[] files = dir.listFiles();
@@ -46,17 +48,17 @@ public class LuceneFirst {
 			String fileContent = FileUtils.readFileToString(f, "utf-8");
 			long fileSize = FileUtils.sizeOf(f);
 			Field fieldName = new TextField("name", fileName, Field.Store.YES);
-			//Field fieldPath = new TextField("path", filePath, Field.Store.YES);
+			// Field fieldPath = new TextField("path", filePath, Field.Store.YES);
 			Field fieldPath = new StoredField("path", filePath);
 			Field fieldContent = new TextField("content", fileContent, Field.Store.YES);
-			//Field fieldSize = new TextField("size", fileSize + "", Field.Store.YES);
+			// Field fieldSize = new TextField("size", fileSize + "", Field.Store.YES);
 			Field fieldSizeValue = new LongPoint("size", fileSize);
 			Field fieldSizeStore = new StoredField("size", fileSize);
 			Document document = new Document();
 			document.add(fieldName);
 			document.add(fieldPath);
 			document.add(fieldContent);
-			//document.add(fieldSize);
+			// document.add(fieldSize);
 			document.add(fieldSizeValue);
 			document.add(fieldSizeStore);
 			indexWriter.addDocument(document);
@@ -78,10 +80,10 @@ public class LuceneFirst {
 		for (ScoreDoc scoreDoc : scoreDocs) {
 			int docId = scoreDoc.doc;
 			Document document = indexSearcher.doc(docId);
-			System.out.println("\nname:\n"+document.get("name"));
-			System.out.println("\npath:\n"+document.get("path"));
-			System.out.println("\nsize:\n"+document.get("size"));
-			//System.out.println("\ncontent:\n"+document.get("content"));
+			System.out.println("\nname:\n" + document.get("name"));
+			System.out.println("\npath:\n" + document.get("path"));
+			System.out.println("\nsize:\n" + document.get("size"));
+			// System.out.println("\ncontent:\n"+document.get("content"));
 			System.out.println("-----------------分割线-------------------------------\n\n\n");
 		}
 		indexReader.close();
@@ -98,4 +100,6 @@ public class LuceneFirst {
 		}
 		tokenStream.close();
 	}
+
+	
 }
