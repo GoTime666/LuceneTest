@@ -25,6 +25,8 @@ public class SearchIndex {
 		indexSearcher = new IndexSearcher(indexReader);
 	}
 
+	
+	//范围查询
 	@Test
 	public void testRangeQuery() throws IOException {
 		Query query = LongPoint.newRangeQuery("size", 0l, 100l);
@@ -46,5 +48,8 @@ public class SearchIndex {
 		}
 		indexReader.close();
 	}
+	
+	
+	
 	
 }
